@@ -26,3 +26,18 @@ app.use('/api/user', userRouter); // test api route
 app.use('/api/auth', authRouter); // signup api route
 
 
+// middleware to handle errors in baackend
+app.use((err,req,res,next) => {
+    const statusCode = err.statusCode || 500;
+    const message = err.message || 'Internal server issue!';
+    return res.status(statusCode)
+    .json(
+        {
+            success: false,
+            statusCode,
+            message,
+        }
+    );
+});
+
+

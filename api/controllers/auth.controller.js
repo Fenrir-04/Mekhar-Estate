@@ -1,13 +1,14 @@
 import User from "../models/user.model.js";
 import bcryptjs from 'bcryptjs';
+import { errorHandler } from "../utils/error.js";
 
-export const signup = async (req,res) => {
-    const {username, email, password} = req.body;
-    const hashPassword = bcryptjs.hashSync(password, 10);
-    const newUser = new User({username, email, password: hashPassword});
+export const signup = async (req,res,next) => {
+    const {username, email, password} = req.body; // get the contents of the user 
+    const hashPassword = bcryptjs.hashSync(password, 10); // for encryption of the password
+    const newUser = new User({username, email, password: hashPassword}); // put the contents of user in the database
     
     try{
-        await newUser.save();
+        await newUser.save(); // method to save the user data in database
         res.status(201)
         .json(
             {
@@ -16,7 +17,6 @@ export const signup = async (req,res) => {
         );
     }
     catch(err){
-        res.status(500)
-        .json(err.message);
+        next(err);
     }
 }
