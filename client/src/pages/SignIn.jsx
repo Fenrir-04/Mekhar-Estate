@@ -1,13 +1,14 @@
-import { set } from 'mongoose';
+import { useDispatch, useSelector } from 'react-redux';
 import React, { useState } from 'react'
 import {Link, useNavigate} from 'react-router-dom';
+import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice.js';
 
 export default function SignIn() {
 
   const [formData, setFormData] = useState({});
-  const [error,setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { error, loading } = useSelector((state) => state.user); 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const changeHandler = (e) => {
     setFormData({
@@ -19,7 +20,7 @@ export default function SignIn() {
   const submitHandler = async (e) => {
     e.preventDefault();
     try{
-      setLoading(true);
+      dispatch(signInStart()); // used redux slice function to start the user sign
       const res = await fetch('/api/auth/signin', { // fetch the data from the signupm form and post it directly from browser
         method: 'POST', 
         headers: {
@@ -32,17 +33,14 @@ export default function SignIn() {
       console.log(data);
 
       if(data.success === false){ // Error handling
-        setLoading(false);
-        setError(data.message); 
+        dispatch(signInFailure(data.message)); // used redux to display user sign in failed
         return;
       }
-      setLoading(false);
-      setError(null);
+      dispatch(signInSuccess(data)); // used redux to diaplay if sign in succeded
       navigate('/');
     }
     catch(err){
-      setLoading(false);
-      setError(err.message);
+      dispatch(signInFailure(err.message)); // used redux if there was any error
     }
   };
 
