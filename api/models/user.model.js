@@ -14,7 +14,11 @@ const userSchema = new mongoose.Schema({ // Define the schema of the database mo
     password: {
         type: String,
         required: true,
-    }
+    },
+    avatar: {
+        type: String,
+        default: "https://w0.peakpx.com/wallpaper/979/89/HD-wallpaper-purple-smile-design-eye-smily-profile-pic-face.jpg"
+    },
 
 }, {timestamps: true}); // to get the timestamps when we need to sort or operate on the data present in database based on dates or time
 
