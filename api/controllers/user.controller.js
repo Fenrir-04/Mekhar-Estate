@@ -21,17 +21,19 @@ export const updateUser = async (req,res,next) => {
             req.body.password = bcryptjs.hashSync(req.body.password, 10); // encrypt the password
         }
 
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, { // update the data
-            $set:{ // set is used bcoz, user might not chenge everything, he can just cahnge any one field
-                username: req.body.username,
-                email: req.body.email,
-                password: req.body.password,
-                avatar: req.body.avatar,
-            }
-            }, {new: true} // without it, the new updated data won't be applied, and the previous data would be shown
+        const updatedUser = await User.findByIdAndUpdate(
+            req.params.id, { // update the data
+                $set: { // set is used bcoz, user might not chenge everything, he can just cahnge any one field
+                    username: req.body.username,
+                    email: req.body.email,
+                    password: req.body.password,
+                    avatar: req.body.avatar,
+                },
+            }, 
+            {new: true} // without it, the new updated data won't be applied, and the previous data would be shown
         ); 
         
-        const {passwrod, ...rest} = updatedUser._doc;
+        const {password, ...rest} = updatedUser._doc;
         res.status(200).json(rest);
     }
 
