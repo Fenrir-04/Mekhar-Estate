@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useRef } from 'react';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from '../firebase.js';
-import { updateUserStart, updateUserFailure, updateUserSuccess } from '../redux/user/userSlice';
+import { updateUserStart, updateUserFailure, updateUserSuccess, deleteUserFailure, deleteUserStart, deleteUserSuccess } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
 
 export default function Profile() {
@@ -85,6 +85,27 @@ export default function Profile() {
     }
   };
 
+  const handleDeleteUser = async () => {
+    try{
+      dispatch(deleteUserStart()); // start the deletion process using redux dispatch
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, { // get the data after doing delete command
+        method: 'DELETE',
+      });
+
+      const data = await res.json(); // jsonify the data recieved
+      
+      if(data.success === false){ // if data recieved is negative, send the errror message recieved
+        dispatch(deleteUserFailure(data.message)); // send error msg thru redux
+        return; // and return
+      }
+
+      dispatch(deleteUserSuccess(data)); // if deletion is successful, then pass the data to redux
+    }
+    catch(err){
+      dispatch(deleteUserFailure(err.message)); // if error encountered, then send it to screen using redux
+    }
+  }
+
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold my-7 text-center'>Profile</h1>
@@ -132,7 +153,7 @@ export default function Profile() {
         </button>
       </form>
       <div className='flex justify-between mt-5'>
-        <span className='text-white bg-red-600 rounded-xl p-1 cursor-pointer hover:opacity-95 disabled:opacity-80'>Delete Account</span>
+        <span onClick={handleDeleteUser} className='text-white bg-red-600 rounded-xl p-1 cursor-pointer hover:opacity-95 disabled:opacity-80'>Delete Account</span>
         <span className='text-white bg-red-600 rounded-xl p-1 cursor-pointer hover:opacity-95 disabled:opacity-80'>Sign Out</span>
       </div>
       <p className='text-red-700 mt-5'>{ error ? error : ''}</p>

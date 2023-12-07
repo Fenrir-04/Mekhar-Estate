@@ -11,7 +11,7 @@ export const test = (req,res) => {
 }
 
 export const updateUser = async (req,res,next) => {
-    // req.user.id -> the user's id when trying to upadte the profile
+    // req.user.id -> the user's id we recieve after the verification(from verifyToken) is done and it's successfull
     // req.params.id -> the id entered into the parameters int user.router.update:id
     // both must be same for the updation process
     if(req.user.id !== req.params.id) return next(errorHandler(401, 'you can only update you own account!'));
@@ -37,6 +37,22 @@ export const updateUser = async (req,res,next) => {
         res.status(200).json(rest);
     }
 
+    catch(err){
+        next(err); // handle error thru middleware -> error.js in utils
+    }
+}
+
+export const deleteUser = async (req,res,next) => {
+    // req.user.id -> the user's id we recieve after the verification(from verifyToken) is done and it's successfull
+    // req.params.id -> the id entered into the parameters int user.router.update:id
+    // both must be same for the updation process
+    if(req.user.id !== req.params.id) return next(errorHandler(401, 'you can only delete you own account!'));
+
+    try{
+        await User.findByIdAndDelete(req.params.id); // simply delete the account present at the given id
+        res.clearCookie('access_token');
+        res.status(200).json('User has been deleted successfully!');
+    }
     catch(err){
         next(err); // handle error thru middleware -> error.js in utils
     }
