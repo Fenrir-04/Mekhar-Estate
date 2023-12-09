@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import userRouter from './routes/user.router.js';
 import authRouter from './routes/auth.route.js';
 import cookieParser from 'cookie-parser';
+import listingRouter from './routes/listing.route.js';
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use(express.json());
 
 app.use('/api/user', userRouter); // test api route
 app.use('/api/auth', authRouter); // signup api route
+app.use('/api/listing', listingRouter); // api to create listing of houses in website
 
 
 // middleware to handle errors in baackend

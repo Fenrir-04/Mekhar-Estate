@@ -10,6 +10,6 @@ export const verifyToken = (req,res,next) => {
         if(err) return next(errorHandler(403, 'Forbidden')); // if error occured, return the error
 
         req.user = user; // if the verification passed, allocate the original data to the requested data
-        next(); // amd allow the next fumction to be executed in the user.router.js file
+        next(); // amd allow the next fumction to be executed in the any.router.js file
     });
 };
