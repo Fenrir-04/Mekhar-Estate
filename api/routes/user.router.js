@@ -10,4 +10,5 @@ router.post('/update/:id', verifyToken, updateUser); // first func will verify i
 router.delete('/delete/:id', verifyToken, deleteUser);
 
 
+
 export default router;

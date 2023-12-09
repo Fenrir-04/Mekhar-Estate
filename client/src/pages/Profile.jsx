@@ -3,7 +3,17 @@ import { useSelector } from 'react-redux';
 import { useRef } from 'react';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from '../firebase.js';
-import { updateUserStart, updateUserFailure, updateUserSuccess, deleteUserFailure, deleteUserStart, deleteUserSuccess } from '../redux/user/userSlice';
+import { 
+  updateUserStart,
+  updateUserFailure,
+  updateUserSuccess,
+  deleteUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  signOutUserFailure,
+  signOutUserStart,
+  signOutUserSuccess } from '../redux/user/userSlice';
+
 import { useDispatch } from 'react-redux';
 
 export default function Profile() {
@@ -104,6 +114,23 @@ export default function Profile() {
     catch(err){
       dispatch(deleteUserFailure(err.message)); // if error encountered, then send it to screen using redux
     }
+  };
+
+  const handleSignOutUser  = async () => {
+    try{
+      dispatch(signOutUserStart()); // start the signout process using redux
+      const res = await fetch('api/auth/signout');
+      const data = res.json();
+      if(data.success === false){
+        dispatch(signOutUserFailure(data.message)); // send the error in response thru redux
+        return;
+      }
+
+      dispatch(signOutUserSuccess(data)); // if no error, then report the success of signout process thru redux
+    }
+    catch(err){
+      dispatch(signOutUserFailure(data.message));
+    }
   }
 
   return (
@@ -154,10 +181,10 @@ export default function Profile() {
       </form>
       <div className='flex justify-between mt-5'>
         <span onClick={handleDeleteUser} className='text-white bg-red-600 rounded-xl p-1 cursor-pointer hover:opacity-95 disabled:opacity-80'>Delete Account</span>
-        <span className='text-white bg-red-600 rounded-xl p-1 cursor-pointer hover:opacity-95 disabled:opacity-80'>Sign Out</span>
+        <span onClick={handleSignOutUser} className='text-white bg-red-600 rounded-xl p-1 cursor-pointer hover:opacity-95 disabled:opacity-80'>Sign Out</span>
       </div>
       <p className='text-red-700 mt-5'>{ error ? error : ''}</p>
-      <p className='text-green-600'>{updateSuccess ? 'Update was successfull!!' : ''}</p>
+      <p className='text-green-700'>{updateSuccess ? 'Update was successfull!!' : ''}</p>
     </div>
   )
 }
