@@ -15,6 +15,7 @@ import {
   signOutUserSuccess } from '../redux/user/userSlice';
 
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 export default function Profile() {
 
@@ -178,6 +179,10 @@ export default function Profile() {
         <button disabled={loading} className='rounded-lg p-3 bg-blue-700 text-white uppercase hover:opacity-95 disabled:opacity-80'>
           {loading ? 'loading...' : 'update'}
         </button>
+        <Link className='bg-green-700 text-white p-3 uppercase rounded-lg text-center hover:opacity-95'
+        to={'/create-listing'}>
+          Create Listing
+        </Link>
       </form>
       <div className='flex justify-between mt-5'>
         <span onClick={handleDeleteUser} className='text-white bg-red-600 rounded-xl p-1 cursor-pointer hover:opacity-95 disabled:opacity-80'>Delete Account</span>
