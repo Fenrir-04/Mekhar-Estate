@@ -29,7 +29,7 @@ app.listen(3000, () => {
 app.use(express.json());
 
 
-app.use('/api/user', userRouter); // test api route
+app.use('/api/user', userRouter); // user functions api route
 app.use('/api/auth', authRouter); // signup api route
 app.use('/api/listing', listingRouter); // api to create listing of houses in website
 
