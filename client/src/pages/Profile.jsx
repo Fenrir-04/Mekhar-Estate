@@ -154,7 +154,23 @@ export default function Profile() {
   };
 
   const handleListingDelete = async (listingId) => {
+    try{
+      const res = await fetch(`/api/listing/delete/${listingId}`, {
+        method: 'DELETE',
+      });
 
+      const data = res.json();
+
+      if(data.success === false){
+        console.log(data.message);
+        return;
+      }
+
+      setUserListings((prev) => prev.filter((listing) => listing._id !== listingId));
+    }
+    catch(error){
+      console.log(error.message);
+    }
   };
 
   return (
@@ -239,7 +255,7 @@ export default function Profile() {
             >
               <Link to={`/listing/${listing._id}`}>
                 <img
-                  src={listing.imageUrls[1]}
+                  src={listing.imageUrls[0]}
                   alt='listing cover'
                   className='h-16 w-16 object-contain'
                 />
