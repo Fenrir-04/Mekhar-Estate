@@ -23,7 +23,7 @@ mongoose.connect(process.env.MongoUrl) // connect server to mongoDB
 })
 
 app.listen(3000, () => { 
-    console.log('Port is running on port 3000!'); //make sever listen on the port 3000
+    console.log('Server is running on port 3000!'); //make sever listen on the port 3000
 });
 
 app.use(express.json());

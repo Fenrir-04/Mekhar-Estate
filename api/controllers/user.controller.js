@@ -73,3 +73,15 @@ export const getUserListings = async (req,res,next) => {
         return next(errorHandler(401, 'you can view only your listings'));
     }
 }
+
+export const getUser = async (req,res,next) => {
+    try{
+        const user = await User.findById(req.params.id);   // find the user with the given id
+        if(!user) return next(errorHandler(404, "User not found!")); // if user not found, then return error
+        const {password: pass, ...rest} = user._doc;   // remove the password from the user's data
+        res.status(200).json(rest);  // send the user's data     
+    }
+    catch(err) {
+        next(err); // handle error thru middleware -> error.js in utils
+    }
+}
