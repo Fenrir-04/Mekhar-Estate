@@ -45,20 +45,20 @@ export default function Profile() {
   const handleFileUpload = (file) => {
     const storage = getStorage(app); // the same app to start the firebase server in the firebase.js
     const fileName = new Date().getTime() + file.name; // date is added to get the unique name and avoid same name for two files
-    const storageRef = ref(storage, fileName);
-    const uploadTask = uploadBytesResumable(storageRef, file);
+    const storageRef = ref(storage, fileName); // reference to the storage in firebase
+    const uploadTask = uploadBytesResumable(storageRef, file); // to upload the file in the storage
 
     uploadTask.on('state_changed', 
     (snapshot) => {
-      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      setFilePerc(Math.round(progress));
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100; // to get the percentage of file uploaded
+      setFilePerc(Math.round(progress)); // set the percentage of file uploaded
     },
 
     (error) => {
       setFileUploadError(true);
     },
 
-    () => {
+    () => { // when the file is uploaded successfully
       getDownloadURL(uploadTask.snapshot.ref)
       .then((downloadURL) => {
         setFormData({...formData, avatar: downloadURL});
