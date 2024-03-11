@@ -1,11 +1,31 @@
 import {FaSearch} from 'react-icons/fa';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import {useSelector} from 'react-redux';
 
 export default function Header() {
 
   const {currentUser} = useSelector((state) => state.user);
+  const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault(); // prevent page from refreshing by default
+    const urlParams = new URLSearchParams(window.location.search); // get the current url query params
+    urlParams.set('searchTerm', searchTerm); // set the searchTerm query param to the value of the input
+    const searchQuery = urlParams.toString(); // convert the urlParams object to a query string
+    navigate(`/search?${searchQuery}`); // navigate to the search page with the query string
+  };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search); // get the current url query params
+    const searchTermFromUrl = urlParams.get('searchTerm'); // get the value of the searchTerm query param
+
+    if(searchTermFromUrl) {
+      setSearchTerm(searchTermFromUrl); // set the searchTerm state to the value of the query param
+    }
+  }, [location.search]); // run this effect whenever the location.search changes
+
   return (
     <header className='bg-slate-300 shadow-md'>
         <div className='flex justify-between items-center mx-auto max-w-6xl p-3'>
@@ -16,10 +36,12 @@ export default function Header() {
                     <span className='text-slate-800'>Hub</span>
                 </h1>
             </Link>
-            <form className='bg-slate-100 p-2 rounded-xl flex items-center'>
+            <form onSubmit={handleSubmit} className='bg-slate-100 p-2 rounded-xl flex items-center'>
                 <input type="text" placeholder='search..' className='bg-transparent
-                focus:outline-none w-24 sm:w-64' />
-                <FaSearch className='text-slate-600' />
+                focus:outline-none w-24 sm:w-64' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                <button>
+                    <FaSearch className='text-slate-600' />
+                </button>
             </form>
             <ul className='flex gap-4 '>
                 <Link to='/'>
